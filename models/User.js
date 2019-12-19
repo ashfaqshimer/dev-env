@@ -41,7 +41,7 @@ UserSchema.pre('save', async function(next) {
 });
 
 // Create gravatar
-UserSchema.post('save', async function(next) {
+UserSchema.pre('save', async function(next) {
   this.avatar = gravatar.url(this.email, { s: '200', r: 'pg', d: 'mm' });
 });
 
