@@ -7,8 +7,11 @@ const ErrorResponse = require('../utils/ErrorResponse');
 // @access  Private/Admin
 exports.createUser = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
+  // Hide the password
+  user.password = undefined;
+  
   const token = user.getSignedJwtToken();
-  res.status(201).json({ success: true, token });
+  res.status(201).json({ success: true, data: user, token });
 });
 
 // @desc    Create a user
@@ -30,7 +33,7 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
   if (!isMatch) {
     return next(new ErrorResponse('Invalid credentials', 401));
   }
-  
+
   const token = user.getSignedJwtToken();
   res.status(201).json({ success: true, token });
 });

@@ -3,7 +3,10 @@ const {
   getCurrentProfile,
   getProfile,
   createProfile,
-  updateProfile
+  updateProfile,
+  getProfiles,
+  deleteProfile,
+  getGithubProfiles
 } = require('../controllers/profile');
 const { protect } = require('../middleware/auth');
 
@@ -11,11 +14,17 @@ const router = express.Router();
 
 router
   .route('/')
+  .get(getProfiles)
   .post(protect, createProfile)
   .put(protect, updateProfile);
 
 router.route('/me').get(protect, getCurrentProfile);
 
-router.route('/:id').get(getProfile);
+router
+  .route('/:id')
+  .get(getProfile)
+  .delete(protect, deleteProfile);
+
+router.route('/github/:username').get(getGithubProfiles);
 
 module.exports = router;

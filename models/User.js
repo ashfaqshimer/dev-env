@@ -24,6 +24,11 @@ const UserSchema = new mongoose.Schema(
     avatar: {
       type: String
     },
+    role: {
+      type: String,
+      enum: ['user'],
+      default: 'user'
+    },
     resetPasswordToken: String,
     resetPasswordExpire: Date
   },
@@ -56,5 +61,11 @@ UserSchema.methods.getSignedJwtToken = function(next) {
 UserSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+// Cascade delete profile when user is deleted
+UserSchema.pre('remove', async function(next) {
+  await this.model('Profile').deleteOne({ user: this._id });
+  next();
+});
 
 module.exports = mongoose.model('User', UserSchema);
