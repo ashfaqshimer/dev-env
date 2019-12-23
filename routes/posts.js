@@ -6,7 +6,9 @@ const {
 	updatePost,
 	deletePost,
 	likePost,
-	unlikePost
+	unlikePost,
+	commentPost,
+	deleteComment
 } = require('../controllers/posts');
 const { protect } = require('../middleware/auth');
 
@@ -24,7 +26,9 @@ router
 	.delete(protect, deletePost);
 
 router.route('/:id/like').put(protect, likePost);
-
 router.route('/:id/unlike').put(protect, unlikePost);
+
+router.route('/:id/comment').put(protect, commentPost);
+router.route('/:id/comment/:comment_id').delete(protect, deleteComment);
 
 module.exports = router;

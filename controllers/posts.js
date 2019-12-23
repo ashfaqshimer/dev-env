@@ -71,7 +71,7 @@ exports.updatePost = asyncHandler(async (req, res, next) => {
 
 // @desc    Like a post
 // @route   PUT /api/v1/posts/:id/like
-// @access  Private/Admin
+// @access  Private
 exports.likePost = asyncHandler(async (req, res, next) => {
 	let post = await Post.findById(req.params.id);
 
@@ -102,7 +102,7 @@ exports.likePost = asyncHandler(async (req, res, next) => {
 
 // @desc    Unlike a post
 // @route   PUT /api/v1/posts/:id/unlike
-// @access  Private/Admin
+// @access  Private
 exports.unlikePost = asyncHandler(async (req, res, next) => {
 	let post = await Post.findById(req.params.id);
 
@@ -133,6 +133,85 @@ exports.unlikePost = asyncHandler(async (req, res, next) => {
 		success: true,
 		count: post.likes.length,
 		data: post.likes
+	});
+});
+
+// @desc    Comment on a post
+// @route   PUT /api/v1/posts/:id/comment
+// @access  Private
+exports.commentPost = asyncHandler(async (req, res, next) => {
+	let post = await Post.findById(req.params.id);
+
+	if (!post) {
+		return next(
+			new ErrorResponse(`Post not found with id of ${req.params.id}`, 404)
+		);
+	}
+
+	const { name, avatar, id } = req.user;
+
+	const newComment = {
+		text: req.body.text,
+		name,
+		avatar,
+		user: id
+	};
+
+	post.comments.unshift(newComment);
+
+	await post.save();
+
+	res.status(200).json({
+		success: true,
+		count: post.comments.length,
+		data: post.comments
+	});
+});
+
+// @desc    Delete a comment
+// @route   DELETE /api/v1/posts/:id/comment/:comment_id
+// @access  Private/Admin
+exports.deleteComment = asyncHandler(async (req, res, next) => {
+	let post = await Post.findById(req.params.id);
+
+	if (!post) {
+		return next(
+			new ErrorResponse(`Post not found with id of ${req.params.id}`, 404)
+		);
+	}
+
+	// Pull out comment
+	const comment = post.comments.find(
+		(comment) => comment.id === req.params.comment_id
+	);
+
+	if (!comment) {
+		return next(
+			new ErrorResponse(
+				`Comment not found with id of ${req.params.comment_id}`,
+				404
+			)
+		);
+	}
+
+	// Check to see if Comment belongs to user or user is an admin
+	if (comment.user.toString() !== req.user.id && req.user.role !== 'admin') {
+		return next(new ErrorResponse(`Not authorized to delete comment`, 401));
+	}
+
+	// Get remove index
+	const removeIndex = post.comments
+		.map((comment) => comment.id.toString())
+		.indexOf(req.params.comment_id);
+
+	post.comments.splice(removeIndex, 1);
+
+	await post.save();
+
+	res.status(200).json({
+		success: true,
+		count: post.comments.length,
+		data: post.comments
 	});
 });
 
