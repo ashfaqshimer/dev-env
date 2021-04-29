@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link, Redirect } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../redux/actions/auth';
 
 const Login = () => {
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
 	});
+	const dispatch = useDispatch();
+	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
 	const { email, password } = formData;
 
@@ -15,13 +18,15 @@ const Login = () => {
 
 	const handleSubmit = async (evt) => {
 		evt.preventDefault();
-
-		console.log('SUCCESS!');
+		dispatch(login(formData));
 	};
+
+	if (isAuthenticated) {
+		return <Redirect to='/dashboard' />;
+	}
 
 	return (
 		<>
-			<div className='alert alert-danger'>Invalid credentials</div>
 			<h1 className='large text-primary'>Sign In</h1>
 			<p className='lead'>
 				<i className='fas fa-user'></i> Sign into Your Account

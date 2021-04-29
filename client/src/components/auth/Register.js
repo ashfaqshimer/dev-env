@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
+import { Link, Redirect } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { setAlert } from '../../redux/actions/alert';
 import { register } from '../../redux/actions/auth';
 
 const Register = () => {
-	const dispatch = useDispatch();
-
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
 		password: '',
 		password2: '',
 	});
+
+	const dispatch = useDispatch();
+	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
 	const { name, email, password, password2 } = formData;
 
@@ -31,6 +31,10 @@ const Register = () => {
 			console.log('SUCCESS!');
 		}
 	};
+
+	if (isAuthenticated) {
+		return <Redirect to='/dashboard' />;
+	}
 
 	return (
 		<>
