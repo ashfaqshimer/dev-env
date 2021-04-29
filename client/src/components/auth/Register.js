@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { setAlert } from '../../redux/actions/alert';
+import { register } from '../../redux/actions/auth';
 
 const Register = () => {
 	const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const Register = () => {
 			console.log('Passwords do not match');
 			dispatch(setAlert('Passwords do not match', 'danger'));
 		} else {
+			dispatch(register({ name, email, password }));
 			console.log('SUCCESS!');
 		}
 	};
@@ -53,6 +55,7 @@ const Register = () => {
 						placeholder='Email Address'
 						value={email}
 						name='email'
+						required
 						onChange={handleChange}
 					/>
 					<small className='form-text'>
@@ -67,6 +70,7 @@ const Register = () => {
 						value={password}
 						name='password'
 						minLength='6'
+						required
 						onChange={handleChange}
 					/>
 				</div>
@@ -75,6 +79,7 @@ const Register = () => {
 						type='password'
 						placeholder='Confirm Password'
 						value={password2}
+						required
 						name='password2'
 						minLength='6'
 						onChange={handleChange}
@@ -87,10 +92,6 @@ const Register = () => {
 			</p>
 		</>
 	);
-};
-
-Register.propTypes = {
-	setAlert: PropTypes.func.isRequired,
 };
 
 export default Register;
