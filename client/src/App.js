@@ -8,6 +8,7 @@ import Landing from './components/layout/Landing';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import store from '../src/redux/store';
+import Alert from './components/layout/Alert';
 
 function App() {
 	return (
@@ -17,6 +18,7 @@ function App() {
 					<Navbar />
 					<Route exact path='/' component={Landing} />
 					<section className='container'>
+						<Alert />
 						<Switch>
 							<Route exact path='/login' component={Login} />
 							<Route exact path='/register' component={Register} />
