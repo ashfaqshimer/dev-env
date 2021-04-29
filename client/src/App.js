@@ -7,7 +7,7 @@ import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-import store from '../src/store';
+import store from '../src/redux/store';
 
 function App() {
 	return (

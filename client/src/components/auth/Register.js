@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
+
+import { setAlert } from '../../redux/actions/alert';
 
 const Register = () => {
+	const dispatch = useDispatch();
+
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
@@ -19,6 +24,7 @@ const Register = () => {
 		evt.preventDefault();
 		if (password !== password2) {
 			console.log('Passwords do not match');
+			dispatch(setAlert('Passwords do not match', 'danger'));
 		} else {
 			console.log('SUCCESS!');
 		}
@@ -81,6 +87,10 @@ const Register = () => {
 			</p>
 		</>
 	);
+};
+
+Register.propTypes = {
+	setAlert: PropTypes.func.isRequired,
 };
 
 export default Register;
