@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getProfile } from '../../redux/actions/profile';
 import Spinner from '../layout/Spinner';
+import DashboardActions from './DashboardActions';
 
 const Dashboard = () => {
 	const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		dispatch(getProfile());
-	}, []);
+	}, [dispatch]);
 
 	return loading && profile === null ? (
 		<Spinner />
@@ -23,7 +24,9 @@ const Dashboard = () => {
 				<i className='fas fa-user'></i> Welcome {user && user.name}
 			</p>
 			{profile !== null ? (
-				<>Has</>
+				<>
+					<DashboardActions />
+				</>
 			) : (
 				<>
 					<p>
