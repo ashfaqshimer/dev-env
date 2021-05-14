@@ -19,21 +19,72 @@ export const getProfile = () => async (dispatch) => {
 };
 
 // Create or update a profile
-export const createProfile = (formData, history, edit = false) => async (
-	dispatch
-) => {
+export const createProfile = (formData, history) => async (dispatch) => {
 	try {
-		let res;
-		if (edit) {
-			res = await axios.put('/api/v1/profile', formData);
-		} else {
-			res = await axios.post('/api/v1/profile', formData);
-		}
+		const res = await axios.post('/api/v1/profile', formData);
+
 		dispatch({ type: GET_PROFILE, payload: res.data });
-		dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success'));
-		if (!edit) {
-			history.push('/dashboard');
+		dispatch(setAlert('Profile Created', 'success'));
+
+		history.push('/dashboard');
+	} catch (error) {
+		const errors = error.response.data.errors;
+		const err = error.response.data.error;
+
+		if (err) {
+			dispatch(setAlert(err, 'danger'));
 		}
+		if (errors) {
+			errors.forEach((error) => dispatch(setAlert(error, 'danger')));
+		}
+
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: error.response.data.error,
+				status: error.response.status,
+			},
+		});
+	}
+};
+
+// Update profile
+export const updateProfile = (formData) => async (dispatch) => {
+	try {
+		const res = await axios.put('/api/v1/profile', formData);
+
+		dispatch({ type: GET_PROFILE, payload: res.data });
+		dispatch(setAlert('Profile Updated', 'success'));
+	} catch (error) {
+		const errors = error.response.data.errors;
+		const err = error.response.data.error;
+
+		if (err) {
+			dispatch(setAlert(err, 'danger'));
+		}
+		if (errors) {
+			errors.forEach((error) => dispatch(setAlert(error, 'danger')));
+		}
+
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: error.response.data.error,
+				status: error.response.status,
+			},
+		});
+	}
+};
+
+// Update profile experience
+export const updateExperience = (formData, history) => async (dispatch) => {
+	try {
+		const res = await axios.put('/api/v1/profile/experience', formData);
+
+		dispatch({ type: GET_PROFILE, payload: res.data });
+		dispatch(setAlert('Profile Updated', 'success'));
+
+		history.push('/dashboard');
 	} catch (error) {
 		const errors = error.response.data.errors;
 		const err = error.response.data.error;

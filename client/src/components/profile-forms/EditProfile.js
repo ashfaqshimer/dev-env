@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import { createProfile, getProfile } from '../../redux/actions/profile';
+import {
+	createProfile,
+	getProfile,
+	updateProfile,
+} from '../../redux/actions/profile';
 import Spinner from '../layout/Spinner';
 
 const EditProfile = () => {
@@ -54,7 +58,7 @@ const EditProfile = () => {
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		dispatch(createProfile(formData, history, true));
+		dispatch(updateProfile(formData));
 	};
 
 	if (loading) {
