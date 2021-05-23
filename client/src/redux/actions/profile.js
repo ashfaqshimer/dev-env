@@ -105,3 +105,33 @@ export const updateExperience = (formData, history) => async (dispatch) => {
 		});
 	}
 };
+
+// Update profile education
+export const updateEducation = (formData, history) => async (dispatch) => {
+	try {
+		const res = await axios.put('/api/v1/profile/education', formData);
+
+		dispatch({ type: GET_PROFILE, payload: res.data });
+		dispatch(setAlert('Profile Updated', 'success'));
+
+		history.push('/dashboard');
+	} catch (error) {
+		const errors = error.response.data.errors;
+		const err = error.response.data.error;
+
+		if (err) {
+			dispatch(setAlert(err, 'danger'));
+		}
+		if (errors) {
+			errors.forEach((error) => dispatch(setAlert(error, 'danger')));
+		}
+
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: error.response.data.error,
+				status: error.response.status,
+			},
+		});
+	}
+};
