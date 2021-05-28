@@ -2,25 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import {
-	createProfile,
-	getProfile,
-	updateProfile,
-} from '../../redux/actions/profile';
+import { setAlert } from '../../store/alert/alertSlice';
+// import {
+// 	createProfile,
+// 	getProfile,
+// 	updateProfile,
+// } from '../../redux/actions/profile';
+import { getProfile, updateProfile } from '../../store/profile/profileSlice';
 import Spinner from '../layout/Spinner';
 
 const EditProfile = () => {
-	const history = useHistory();
 	const dispatch = useDispatch();
 
 	const profile = useSelector((state) => state.profile.profile);
-	const loading = useSelector((state) => state.profile.loading);
+	const profileStatus = useSelector((state) => state.profile.status);
 
 	useEffect(() => {
-		if (!profile) dispatch(getProfile());
+		if (profileStatus === 'idle') dispatch(getProfile());
 
-		if (!loading && profile) setFormData(profile);
-	}, [loading, dispatch]);
+		if (profileStatus === 'succeeded') setFormData(profile);
+	}, [profileStatus, dispatch]);
 
 	const [formData, setFormData] = useState({
 		company: '',
@@ -57,11 +58,16 @@ const EditProfile = () => {
 		setFormData({ ...formData, [evt.target.name]: evt.target.value });
 
 	const handleSubmit = (evt) => {
-		evt.preventDefault();
-		dispatch(updateProfile(formData));
+		try {
+			evt.preventDefault();
+			dispatch(updateProfile(formData));
+			dispatch(setAlert('Profile Updated', 'success'));
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
-	if (loading) {
+	if (profileStatus === 'loading') {
 		return <Spinner />;
 	}
 

@@ -6,7 +6,7 @@ import { logout } from '../../redux/actions/auth';
 
 const Navbar = () => {
 	const dispatch = useDispatch();
-	const loading = useSelector((state) => state.auth.loading);
+	const status = useSelector((state) => state.auth.status);
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
 	const authLinks = (
@@ -47,7 +47,7 @@ const Navbar = () => {
 					<i className='fas fa-code'></i> DevEnv
 				</Link>
 			</h1>
-			{!loading && <>{isAuthenticated ? authLinks : guestLinks}</>}
+			{status !== 'loading' && <>{isAuthenticated ? authLinks : guestLinks}</>}
 		</nav>
 	);
 };
