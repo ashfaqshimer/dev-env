@@ -57,10 +57,10 @@ const EditProfile = () => {
 	const handleChange = (evt) =>
 		setFormData({ ...formData, [evt.target.name]: evt.target.value });
 
-	const handleSubmit = (evt) => {
+	const handleSubmit = async (evt) => {
 		try {
 			evt.preventDefault();
-			dispatch(updateProfile(formData));
+			await dispatch(updateProfile(formData));
 			dispatch(setAlert('Profile Updated', 'success'));
 		} catch (err) {
 			console.log(err);
