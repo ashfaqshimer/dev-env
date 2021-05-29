@@ -17,6 +17,13 @@ export const loadUser = createAsyncThunk('auth/loadUser', async () => {
 	return res.data;
 });
 
+export const login = createAsyncThunk('auth/login', async (data) => {
+	const response = await axios.post('/api/v1/auth/login', data);
+	localStorage.setItem('token', response.data.token);
+	setAuthToken(localStorage.token);
+	return response.data;
+});
+
 const authSlice = createSlice({
 	name: 'auth',
 	initialState,
@@ -36,6 +43,20 @@ const authSlice = createSlice({
 			state.isAuthenticated = false;
 			state.user = null;
 			state.token = null;
+		},
+		[login.pending]: (state, action) => {
+			state.status = 'loading';
+		},
+		[login.fulfilled]: (state, action) => {
+			state.status = 'succeeded';
+			state.user = action.payload.data;
+			state.token = action.payload.token;
+			state.isAuthenticated = true;
+			state.loading = false;
+		},
+		[login.rejected]: (state, action) => {
+			localStorage.removeItem('token');
+			state.status = 'failed';
 		},
 	},
 });

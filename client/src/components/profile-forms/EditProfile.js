@@ -60,8 +60,8 @@ const EditProfile = () => {
 	const handleSubmit = async (evt) => {
 		try {
 			evt.preventDefault();
-			await dispatch(updateProfile(formData));
-			dispatch(setAlert('Profile Updated', 'success'));
+			dispatch(updateProfile(formData));
+			// dispatch(setAlert('Profile Updated', 'success'));
 		} catch (err) {
 			console.log(err);
 		}

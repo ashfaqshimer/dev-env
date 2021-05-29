@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import setAuthToken from '../../utils/setAuthToken';
+import { setAlert } from '../alert/alertSlice';
 
 const initialState = {
 	profile: null,
@@ -16,8 +16,9 @@ export const getProfile = createAsyncThunk('profile/getProfile', async () => {
 
 export const updateProfile = createAsyncThunk(
 	'profile/updateProfile',
-	async (formData) => {
+	async (formData, { dispatch }) => {
 		const res = await axios.put('/api/v1/profile', formData);
+		dispatch(setAlert('Profile Updated', 'success'));
 		return res.data;
 	}
 );

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../redux/actions/auth';
+import { login } from '../../store/auth/authSlice';
+import Spinner from '../layout/Spinner';
 
 const Login = () => {
 	const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const Login = () => {
 	});
 	const dispatch = useDispatch();
 	const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+	const status = useSelector((state) => state.auth.status);
 
 	const { email, password } = formData;
 
@@ -23,6 +25,10 @@ const Login = () => {
 
 	if (isAuthenticated) {
 		return <Redirect to='/dashboard' />;
+	}
+
+	if (status === 'loading') {
+		return <Spinner />;
 	}
 
 	return (
