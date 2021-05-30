@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { setAlert } from '../../redux/actions/alert';
-import { register } from '../../redux/actions/auth';
+import { setAlert } from '../../store/alert/alertSlice';
+import { register } from '../../store/auth/authSlice';
 
 const Register = () => {
 	const [formData, setFormData] = useState({

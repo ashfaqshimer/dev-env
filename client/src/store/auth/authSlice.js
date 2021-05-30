@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import axios from 'axios';
 import setAuthToken from '../../utils/setAuthToken';
 
@@ -24,40 +24,58 @@ export const login = createAsyncThunk('auth/login', async (data) => {
 	return response.data;
 });
 
+export const register = createAsyncThunk('auth/register', async (data) => {
+	const response = await axios.post('/api/v1/auth/register', data);
+	localStorage.setItem('token', response.data.token);
+	setAuthToken(localStorage.token);
+	return response.data;
+});
+
 const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {},
-	extraReducers: {
-		[loadUser.pending]: (state, action) => {
-			state.status = 'loading';
-		},
-		[loadUser.fulfilled]: (state, action) => {
-			state.status = 'succeeded';
-			state.user = action.payload.data;
-			state.isAuthenticated = true;
-		},
-		[loadUser.rejected]: (state, action) => {
-			localStorage.removeItem('token');
-			state.status = 'failed';
-			state.isAuthenticated = false;
-			state.user = null;
-			state.token = null;
-		},
-		[login.pending]: (state, action) => {
-			state.status = 'loading';
-		},
-		[login.fulfilled]: (state, action) => {
-			state.status = 'succeeded';
-			state.user = action.payload.data;
-			state.token = action.payload.token;
-			state.isAuthenticated = true;
-			state.loading = false;
-		},
-		[login.rejected]: (state, action) => {
-			localStorage.removeItem('token');
-			state.status = 'failed';
-		},
+	extraReducers: (builder) => {
+		builder
+			.addCase(loadUser.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.user = action.payload.data;
+				state.isAuthenticated = true;
+			})
+			.addCase(loadUser.rejected, (state, action) => {
+				localStorage.removeItem('token');
+				state.status = 'failed';
+				state.isAuthenticated = false;
+				state.user = null;
+				state.token = null;
+			})
+			.addCase(login.rejected, (state, action) => {
+				localStorage.removeItem('token');
+				state.status = 'failed';
+			})
+			.addMatcher(
+				isAnyOf(login.fulfilled, register.fulfilled),
+				(state, action) => {
+					state.status = 'succeeded';
+					state.user = action.payload.data;
+					state.token = action.payload.token;
+					state.isAuthenticated = true;
+					state.loading = false;
+				}
+			)
+			.addMatcher(
+				isAnyOf(login.rejected, register.rejected),
+				(state, action) => {
+					localStorage.removeItem('token');
+					state.status = 'failed';
+				}
+			)
+			.addMatcher(
+				isAnyOf(loadUser.pending, login.pending, register.pending),
+				(state, action) => {
+					state.status = 'loading';
+				}
+			);
 	},
 });
 
