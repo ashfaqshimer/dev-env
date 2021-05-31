@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getProfile } from '../../store/profile/profileSlice';
+import { getProfile } from '../../store/profileSlice';
 import Spinner from '../layout/Spinner';
 import DashboardActions from './DashboardActions';
 import Education from './Education';
@@ -14,8 +14,8 @@ const Dashboard = () => {
 	const user = useSelector((state) => state.auth.user);
 
 	useEffect(() => {
-		dispatch(getProfile());
-	}, [dispatch]);
+		if (status === 'idle') dispatch(getProfile());
+	}, [dispatch, status]);
 
 	return status === 'loading' ? (
 		<Spinner />

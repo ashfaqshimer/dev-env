@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import { setAlert } from '../../store/alert/alertSlice';
+import { setAlert } from '../../store/alertSlice';
 // import {
 // 	createProfile,
 // 	getProfile,
 // 	updateProfile,
 // } from '../../redux/actions/profile';
-import { getProfile, updateProfile } from '../../store/profile/profileSlice';
+import { getProfile, updateProfile } from '../../store/profileSlice';
 import Spinner from '../layout/Spinner';
 
 const EditProfile = () => {

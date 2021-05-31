@@ -11,7 +11,7 @@ import Register from './components/auth/Register';
 import store from './store';
 import Alert from './components/layout/Alert';
 // import { loadUser } from './redux/actions/auth';
-import { loadUser } from './store/auth/authSlice';
+import { loadUser } from './store/authSlice';
 import setAuthToken from './utils/setAuthToken';
 import Dashboard from './components/dashboard/Dashboard';
 import PrivateRoute from './components/routing/PrivateRoute';

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import axios from 'axios';
-import setAuthToken from '../../utils/setAuthToken';
+import setAuthToken from '../utils/setAuthToken';
 
 const initialState = {
 	token: localStorage.getItem('token'),

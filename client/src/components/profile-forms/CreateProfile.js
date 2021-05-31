@@ -1,8 +1,10 @@
+import { unwrapResult } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import { createProfile } from '../../redux/actions/profile';
+import { createProfile } from '../../store/profileSlice';
+// import { createProfile } from '../../redux/actions/profile';
 
 const CreateProfile = () => {
 	const history = useHistory();
@@ -44,7 +46,9 @@ const CreateProfile = () => {
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		dispatch(createProfile(formData, history));
+		dispatch(createProfile(formData))
+			.then(unwrapResult)
+			.then(() => history.push('/dashboard'));
 	};
 
 	return (

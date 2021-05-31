@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../store/auth/authSlice';
+import { login } from '../../store/authSlice';
 import Spinner from '../layout/Spinner';
 
 const Login = () => {
